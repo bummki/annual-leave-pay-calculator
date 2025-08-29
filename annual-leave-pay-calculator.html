@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>연차수당 계산기 · 단일 HTML</title>
+  <meta name="description" content="미사용 연차 일수와 임금 정보를 입력하면 연차수당을 간편 계산합니다. 월 통상임금, 통상시급, 1일 통상임금, 총 수당까지 산출." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root{ --primary:#3182F6; --primary-dark:#1B64DA; --ink:#0F172A; --sub:#334155; --muted:#64748B; --line:#E2E8F0; --bg:#F8FAFC; }
+    html,body{ height:100%; }
+    body{ background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Noto Sans KR",system-ui,Segoe UI,Roboto,Helvetica,Arial; }
+    .balance{ text-wrap:balance; }
+    .container{ max-width: 1120px; }
+    .card{ background:#fff; border:1px solid var(--line); border-radius:16px; box-shadow:0 1px 2px rgba(16,24,40,.05); }
+    .card:hover{ box-shadow:0 2px 8px rgba(16,24,40,.08); }
+    .btn{ display:inline-flex; align-items:center; justify-content:center; gap:.5rem; font-weight:600; border-radius:12px; padding:.875rem 1.25rem; transition:all .15s ease; }
+    .btn-primary{ background:var(--primary); color:#fff; }
+    .btn-primary:hover{ background:var(--primary-dark); }
+    .btn-secondary{ background:#F1F5F9; color:var(--ink); border:1px solid var(--line); }
+    .btn-secondary:hover{ background:#E2E8F0; }
+    .input{ background:#fff; border:1px solid #CBD5E1; border-radius:12px; padding:.75rem 1rem; width:100%; }
+    .input:focus{ outline: none; box-shadow: 0 0 0 2px rgba(49,130,246,.35); border-color:#93C5FD; }
+    .chip{ background:#EEF2FF; color:#3730A3; border:1px solid #E0E7FF; font-size:.75rem; padding:.25rem .5rem; border-radius:999px; }
+    .mono{ font-variant-numeric: tabular-nums; font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace; }
+    .hint{ font-size:.75rem; color:#64748B }
+  .btn-sm{padding:.625rem .875rem;font-size:.875rem;border-radius:10px}
+.btn-sm input{transform:scale(.95)}
+.keep-all{word-break:keep-all}
+</style>
+</head>
+<body class="min-h-screen">
+  <!-- Header -->
+  <header class="sticky top-0 z-30 bg-white border-b border-slate-100">
+    <div class="mx-auto container px-5 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="font-semibold">연차수당 계산기 <span class="text-slate-400">· Beta</span></div>
+      </div>
+      <nav class="hidden md:flex items-center gap-4 text-sm text-slate-600">
+        <a href="#calc" class="hover:text-slate-900">Calculator</a>
+        <a href="#faq" class="hover:text-slate-900">FAQ</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="mx-auto container px-5 py-10 md:py-16">
+    <div class="grid lg:grid-cols-2 gap-10 items-center">
+      <div>
+        <h1 class="balance keep-all tracking-tight leading-tight font-extrabold text-3xl md:text-4xl lg:text-5xl">연차수당 계산기</h1>
+        <p class="mt-4 text-base text-slate-700 leading-7">미사용 연차 <b>일수</b>와 임금 정보를 입력하면 <b>통상시급</b>·<b>1일 통상임금</b>을 통해 총 <b>연차수당</b>을 계산합니다. <span class="chip">간이 계산</span></p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a href="#calc" class="btn btn-primary">지금 계산하기
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m14 5 7 7-7 7M21 12H3"/></svg>
+          </a>
+          <button id="btn-open-guide" class="btn btn-secondary">가이드 보기</button>
+        </div>
+        <p class="mt-3 text-sm text-slate-500">* 회사 규정/사용촉진/소멸시효 등 특수 사정은 미반영. 실제 정산은 사규·노무전문가 확인 권장.</p>
+      </div>
+      <div class="card p-6 md:p-7">
+        <h3 class="text-slate-900 font-semibold">예시</h3>
+        <ul class="mt-4 space-y-2 text-sm text-slate-700">
+          <li>미사용 연차 <b>5일</b>, 주 <b>40시간</b>(주5일), 1일 <b>8시간</b></li>
+          <li>월 기본급 <b>2,500,000</b>원, 월 고정수당 <b>200,000</b>원, 연간 상여금 <b>2,400,000</b>원(포함)</li>
+        </ul>
+        <button id="btn-fill-demo" class="mt-5 w-full btn btn-secondary">예시값으로 입력 채우기</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Calculator -->
+  <section id="calc" class="mx-auto container px-5 pb-24">
+    <div class="card p-6 md:p-8">
+      <div class="flex flex-wrap items-start gap-6 justify-between">
+        <div>
+          <h2 class="balance text-xl md:text-3xl font-extrabold">입력</h2>
+          <p class="mt-2 text-slate-600">필수값을 입력 후 <b>계산</b>을 누르세요.</p>
+        </div>
+      </div>
+
+      <div class="mt-6 grid gap-5 md:grid-cols-3">
+        <!-- 미사용 연차일수 -->
+        <label class="block">
+          <span class="text-sm text-slate-600">연차 미사용일 수 (일)</span>
+          <input id="unusedDays" type="number" min="0" step="0.5" class="input mt-2" placeholder="예) 5" />
+        </label>
+
+        <!-- 1일 소정근로시간 -->
+        <label class="block">
+          <span class="text-sm text-slate-600">1일 소정근로시간 (시간)</span>
+          <input id="dailyHours" type="number" min="1" step="0.5" class="input mt-2" placeholder="예) 8" />
+          <p class="hint mt-1">연차 1일당 유급 시간. 보통 8시간(주5일 기준).</p>
+        </label>
+
+        <!-- 주 소정근로시간 선택 -->
+        <div class="block">
+          <span class="text-sm text-slate-600">1주 근무시간</span>
+          <div class="mt-2 grid grid-cols-2 gap-2">
+            <label class="btn btn-secondary btn-sm"><input type="radio" name="wh" value="40" class="accent-[--primary]"> <span>40시간(주5일)</span></label>
+            <label class="btn btn-secondary btn-sm"><input type="radio" name="wh" value="44" class="accent-[--primary]"> <span>44시간(주5일+토4)</span></label>
+            <label class="btn btn-secondary btn-sm"><input type="radio" name="wh" value="48" class="accent-[--primary]"> <span>48시간(주6일)</span></label>
+            <label class="btn btn-secondary btn-sm"><input type="radio" name="wh" value="custom" class="accent-[--primary]"> <span>직접입력</span></label>
+          </div>
+          <input id="weeklyHours" type="number" min="0" step="0.5" class="input mt-2 hidden" placeholder="직접 입력 (시간)" />
+          <p class="hint mt-1">월 소정근로시간 = <span class="mono">(주 근무시간 + 1일 소정근로시간) × 365/7 ÷ 12</span> (주휴 포함 가정)</p>
+        </div>
+      </div>
+
+      <div class="mt-6 grid gap-5 md:grid-cols-3">
+        <label class="block">
+          <span class="text-sm text-slate-600">월 기본급 (원)</span>
+          <input id="monthlyBase" type="text" inputmode="numeric" class="input mt-2" placeholder="예) 2,500,000" />
+        </label>
+        <label class="block">
+          <span class="text-sm text-slate-600">월 고정수당 (원)</span>
+          <input id="monthlyFixed" type="text" inputmode="numeric" class="input mt-2" placeholder="예) 200,000" />
+        </label>
+        <label class="block">
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-slate-600">연간 상여금 (원)</span>
+            <label class="text-xs flex items-center gap-2 select-none"><input id="includeBonus" type="checkbox" class="accent-[--primary]" checked> 통상임금 포함</label>
+          </div>
+          <input id="annualBonus" type="text" inputmode="numeric" class="input mt-2" placeholder="예) 2,400,000" />
+          <p class="hint mt-1">정기·고정적 성격의 상여만 포함(예: 정기상여). 불확정 성과급 등은 제외.</p>
+        </label>
+      </div>
+
+      <div class="mt-6 flex flex-wrap gap-3">
+        <button id="btn-calc" class="btn btn-primary">계산 (Calculate)
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg>
+        </button>
+        <button id="btn-reset" class="btn btn-secondary">초기화 (Reset)</button>
+        <button id="btn-print" class="btn btn-secondary">인쇄 (Print)</button>
+      </div>
+
+      <!-- 결과 -->
+      <div id="result" class="mt-10 hidden">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <h3 class="text-lg md:text-xl font-extrabold">결과</h3>
+          <div class="flex items-center gap-2">
+            <button id="btn-copy" class="btn btn-secondary">결과 복사</button>
+            <button id="btn-csv" class="btn btn-secondary">CSV 다운로드</button>
+          </div>
+        </div>
+
+        <div class="mt-5 grid gap-5 lg:grid-cols-3">
+          <div class="card p-5">
+            <div class="text-sm text-slate-600">총 연차수당</div>
+            <div id="total-pay" class="mt-2 text-3xl font-extrabold mono">₩0</div>
+            <div id="total-note" class="text-xs text-slate-500 mt-1"></div>
+          </div>
+          <div class="card p-5">
+            <div class="text-sm text-slate-600">1일 통상임금</div>
+            <div id="daily-pay" class="mt-2 text-2xl font-bold mono">₩0</div>
+            <div class="text-xs text-slate-500 mt-1">통상시급 × 1일 소정근로시간</div>
+          </div>
+          <div class="card p-5">
+            <div class="text-sm text-slate-600">통상시급</div>
+            <div id="hourly-pay" class="mt-2 text-2xl font-bold mono">₩0</div>
+            <div class="text-xs text-slate-500 mt-1">(월 통상임금 ÷ 월 소정근로시간)</div>
+          </div>
+        </div>
+
+        <div class="mt-8 grid lg:grid-cols-2 gap-5">
+          <div class="card p-5">
+            <h4 class="font-semibold">입력하신 내용</h4>
+            <div class="mt-3 grid grid-cols-2 gap-3 text-sm">
+              <div class="text-slate-600">미사용 연차(일)</div><div id="sum-unused" class="mono text-right">-</div>
+              <div class="text-slate-600">1일 소정근로시간</div><div id="sum-daily-hours" class="mono text-right">-</div>
+              <div class="text-slate-600">1주 근무시간</div><div id="sum-weekly-hours" class="mono text-right">-</div>
+              <div class="text-slate-600">월 기본급</div><div id="sum-base" class="mono text-right">-</div>
+              <div class="text-slate-600">월 고정수당</div><div id="sum-fixed" class="mono text-right">-</div>
+              <div class="text-slate-600">연간 상여금(월환산)</div><div id="sum-bonus" class="mono text-right">-</div>
+            </div>
+          </div>
+          <div class="card p-5">
+            <h4 class="font-semibold">세부 계산</h4>
+            <div class="mt-3 grid grid-cols-2 gap-3 text-sm">
+              <div class="text-slate-600">월 통상임금</div><div id="sum-monthly-ordinary" class="mono text-right">-</div>
+              <div class="text-slate-600">월 소정근로시간</div><div id="sum-monthly-hours" class="mono text-right">-</div>
+              <div class="text-slate-600">통상시급</div><div id="sum-hourly" class="mono text-right">-</div>
+              <div class="text-slate-600">1일 통상임금</div><div id="sum-daily" class="mono text-right">-</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ / Guide -->
+  <section id="faq" class="mx-auto container px-5 pb-24">
+    <div class="grid lg:grid-cols-2 gap-8">
+      <div class="card p-6">
+        <h4 class="text-lg font-bold">자주 묻는 질문</h4>
+        <div class="mt-4 space-y-4 text-sm text-slate-700">
+          <details class="card p-4">
+            <summary class="cursor-pointer font-semibold">어느 달 임금을 기준으로 계산하나요?</summary>
+            <p class="mt-2">통상적으로 <b>휴가 사용이 가능한 마지막 달</b>의 임금을 기준으로 합니다. 예: 11/15까지 15개의 연차가 가능하고 그중 10개 미사용이면, <b>11월 임금</b> 기준으로 10일분 연차수당을 산출.</p>
+          </details>
+          <details class="card p-4">
+            <summary class="cursor-pointer font-semibold">상여금도 포함하나요?</summary>
+            <p class="mt-2">정기·일정·고정적으로 지급되는 <b>정기상여, 재직요건 상여, 최소보장 성과급</b> 등은 통상임금에 포함되는 사례가 많습니다. 반면 회사 경영성과나 전적 변동적인 성과급은 제외될 수 있습니다. 본 계산기는 입력한 상여금을 <b>월환산(÷12)</b>하여 포함할지 체크로 결정합니다.</p>
+          </details>
+          <details class="card p-4">
+            <summary class="cursor-pointer font-semibold">못 받은 연차수당의 청구기한은?</summary>
+            <p class="mt-2">연차수당 청구권은 발생 다음날부터 <b>3년</b>의 소멸시효가 적용됩니다. 단, 회사가 <b>연차 사용촉진</b>을 적법하게 했고 그럼에도 미사용한 경우는 수당 청구권이 없을 수 있습니다.</p>
+          </details>
+        </div>
+      </div>
+      <div class="card p-6">
+        <h4 class="text-lg font-bold">참고</h4>
+        <ul class="mt-3 list-disc pl-5 text-sm text-slate-700 leading-7">
+          <li>월 소정근로시간 계산: <code>(주 근무시간 + 1일 소정근로시간) × 365/7 ÷ 12</code> (주휴 포함 가정 → 주40h 시 약 209시간)</li>
+          <li>연차수당: <code>미사용일수 × 1일 통상임금</code>, <code>1일 통상임금 = 통상시급 × 1일 소정근로시간</code></li>
+          <li>실무 해석/사규에 따라 세부 반영은 달라질 수 있습니다.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer class="py-10 text-center text-slate-500 text-sm">
+    <div class="mx-auto container px-5">© <span id="yy"></span> 연차수당 계산기 · Beta</div>
+  </footer>
+
+  <script>
+    // ===== Utils =====
+    const KR = new Intl.NumberFormat('ko-KR');
+    const fmtKRW = n => '₩' + KR.format(Math.round(n||0));
+    const fmtNum = n => KR.format(Math.round(n||0));
+    const parseKRW = v => { if(!v) return 0; return parseFloat(String(v).replace(/[^0-9.\-]/g,''))||0; };
+    const WPM = 365/7/12; // 평균 주수(4.345...)
+
+    function getWeeklyHours(){
+      const sel = document.querySelector('input[name="wh"]:checked')?.value;
+      if(sel === 'custom') return parseFloat(document.getElementById('weeklyHours').value)||0;
+      if(sel) return parseFloat(sel);
+      return 40; // default
+    }
+
+    function autoDailyHoursByWeekly(wh){
+      if(wh===40) return 8;
+      if(wh===44) return 8; // (주5일+토4)도 일일 기준 8h 가정
+      if(wh===48) return 8; // (주6일) 8h
+      return 8;
+    }
+
+    function monthStdHours(wh, dh){
+      return (wh + dh) * WPM; // 주휴 1일분 포함 가정
+    }
+
+    function calc(){
+      const unusedDays = parseFloat(document.getElementById('unusedDays').value)||0;
+      const sel = document.querySelector('input[name="wh"]:checked')?.value;
+      const wh = getWeeklyHours();
+      let dh = parseFloat(document.getElementById('dailyHours').value)||0;
+      if(!dh){ dh = autoDailyHoursByWeekly(wh); document.getElementById('dailyHours').value = dh; }
+
+      const monthlyBase = parseKRW(document.getElementById('monthlyBase').value);
+      const monthlyFixed = parseKRW(document.getElementById('monthlyFixed').value);
+      const annualBonus = parseKRW(document.getElementById('annualBonus').value);
+      const includeBonus = document.getElementById('includeBonus').checked;
+      const bonusMonthly = includeBonus ? (annualBonus/12) : 0;
+
+      const monthlyOrdinary = monthlyBase + monthlyFixed + bonusMonthly;
+      const monthlyHours = monthStdHours(wh, dh);
+      const hourly = monthlyHours>0 ? (monthlyOrdinary / monthlyHours) : 0;
+      const daily = hourly * dh;
+      const total = daily * unusedDays;
+
+      // render
+      document.getElementById('total-pay').textContent = fmtKRW(total);
+      document.getElementById('daily-pay').textContent = fmtKRW(daily);
+      document.getElementById('hourly-pay').textContent = fmtKRW(hourly);
+      document.getElementById('total-note').textContent = unusedDays ? `${unusedDays}일 × 1일 통상임금` : '';
+
+      document.getElementById('sum-unused').textContent = unusedDays + '일';
+      document.getElementById('sum-daily-hours').textContent = dh + '시간';
+      document.getElementById('sum-weekly-hours').textContent = wh + '시간';
+      document.getElementById('sum-base').textContent = fmtKRW(monthlyBase);
+      document.getElementById('sum-fixed').textContent = fmtKRW(monthlyFixed);
+      document.getElementById('sum-bonus').textContent = includeBonus ? fmtKRW(bonusMonthly) + ' /월' : '제외';
+
+      document.getElementById('sum-monthly-ordinary').textContent = fmtKRW(monthlyOrdinary);
+      document.getElementById('sum-monthly-hours').textContent = KR.format(monthlyHours.toFixed(2)) + ' 시간';
+      document.getElementById('sum-hourly').textContent = fmtKRW(hourly);
+      document.getElementById('sum-daily').textContent = fmtKRW(daily);
+
+      document.getElementById('result').classList.remove('hidden');
+    }
+
+    // ===== Bindings =====
+    const today = new Date();
+    document.getElementById('yy').textContent = today.getFullYear();
+
+    document.getElementById('btn-calc').addEventListener('click', calc);
+    document.getElementById('btn-print').addEventListener('click', ()=> window.print());
+    document.getElementById('btn-reset').addEventListener('click', ()=>{
+      document.querySelectorAll('#calc input').forEach(el=>{ if(el.type==='checkbox') el.checked = el.id==='includeBonus'; else el.value=''; });
+      document.querySelector('input[name="wh"][value="40"]').checked = true;
+      document.getElementById('dailyHours').value = '8';
+      document.getElementById('result').classList.add('hidden');
+    });
+
+    // number formatting on blur
+    const moneyIds = ['monthlyBase','monthlyFixed','annualBonus'];
+    moneyIds.forEach(id=>{
+      const el = document.getElementById(id);
+      el.addEventListener('blur', ()=>{ const n = parseKRW(el.value); el.value = n? KR.format(n):''; });
+    });
+
+    // weekly hours radio -> show custom field
+    const whRadios = document.querySelectorAll('input[name="wh"]');
+    const $weeklyHours = document.getElementById('weeklyHours');
+    whRadios.forEach(r=> r.addEventListener('change', ()=>{
+      if(r.value==='custom' && r.checked){ $weeklyHours.classList.remove('hidden'); $weeklyHours.focus(); }
+      else if(r.checked){ $weeklyHours.classList.add('hidden'); $weeklyHours.value=''; }
+    }));
+
+    // demo fill
+    document.getElementById('btn-fill-demo').addEventListener('click', ()=>{
+      document.getElementById('unusedDays').value = '5';
+      document.querySelector('input[name="wh"][value="40"]').checked = true;
+      document.getElementById('weeklyHours').classList.add('hidden');
+      document.getElementById('dailyHours').value = '8';
+      document.getElementById('monthlyBase').value = '2,500,000';
+      document.getElementById('monthlyFixed').value = '200,000';
+      document.getElementById('annualBonus').value = '2,400,000';
+      document.getElementById('includeBonus').checked = true;
+      location.hash = '#calc';
+    });
+
+    // copy / csv
+    document.getElementById('btn-copy').addEventListener('click', ()=>{
+      const lines = [
+        ['총 연차수당', document.getElementById('total-pay').textContent],
+        ['1일 통상임금', document.getElementById('daily-pay').textContent],
+        ['통상시급', document.getElementById('hourly-pay').textContent],
+        ['미사용 연차(일)', document.getElementById('sum-unused').textContent],
+        ['1일 소정근로시간', document.getElementById('sum-daily-hours').textContent],
+        ['1주 근무시간', document.getElementById('sum-weekly-hours').textContent],
+        ['월 기본급', document.getElementById('sum-base').textContent],
+        ['월 고정수당', document.getElementById('sum-fixed').textContent],
+        ['연간 상여금(월환산)', document.getElementById('sum-bonus').textContent],
+        ['월 통상임금', document.getElementById('sum-monthly-ordinary').textContent],
+        ['월 소정근로시간', document.getElementById('sum-monthly-hours').textContent],
+        ['통상시급', document.getElementById('sum-hourly').textContent],
+        ['1일 통상임금', document.getElementById('sum-daily').textContent]
+      ];
+      const text = lines.map(([k,v])=> `${k}\t${v}`).join('\n');
+      navigator.clipboard.writeText(text).then(()=> alert('결과를 복사했습니다.'));
+    });
+
+    document.getElementById('btn-csv').addEventListener('click', ()=>{
+      const rows = [
+        ['항목','값'],
+        ['총 연차수당', document.getElementById('total-pay').textContent],
+        ['1일 통상임금', document.getElementById('daily-pay').textContent],
+        ['통상시급', document.getElementById('hourly-pay').textContent],
+        ['미사용 연차(일)', document.getElementById('sum-unused').textContent],
+        ['1일 소정근로시간', document.getElementById('sum-daily-hours').textContent],
+        ['1주 근무시간', document.getElementById('sum-weekly-hours').textContent],
+        ['월 기본급', document.getElementById('sum-base').textContent],
+        ['월 고정수당', document.getElementById('sum-fixed').textContent],
+        ['연간 상여금(월환산)', document.getElementById('sum-bonus').textContent],
+        ['월 통상임금', document.getElementById('sum-monthly-ordinary').textContent],
+        ['월 소정근로시간', document.getElementById('sum-monthly-hours').textContent],
+        ['통상시급', document.getElementById('sum-hourly').textContent],
+        ['1일 통상임금', document.getElementById('sum-daily').textContent]
+      ];
+      const csv = rows.map(r=> r.map(v=> '"'+String(v).replaceAll('"','""')+'"').join(',')).join('\n');
+      const blob = new Blob(["\ufeff" + csv], {type:'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = `연차수당계산기_${new Date().toISOString().slice(0,10)}.csv`; a.click();
+      setTimeout(()=> URL.revokeObjectURL(url), 4000);
+    });
+  </script>
+</body>
+</html>
