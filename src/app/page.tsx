@@ -1,3 +1,6 @@
+import Link from "next/link";
+import AdSenseBanner from "@/components/layout/AdSense";
+
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-background relative overflow-hidden">
@@ -49,7 +52,16 @@ export default function Home() {
           >
             신입사원(1년 미만) 연차 현황
           </a>
+          <a
+            href="/hr-admin"
+            className="md:col-span-2 bg-slate-900 text-white font-bold py-5 px-6 rounded-2xl shadow-xl hover:bg-slate-800 hover:scale-102 transition-all duration-300 text-xl flex flex-col items-center justify-center gap-1 border-b-4 border-primary"
+          >
+            <span className="text-primary text-sm uppercase tracking-widest font-black">HR EXPERT ONLY</span>
+            인사팀용 올인원 대시보드 (CSV 업로드)
+          </a>
         </div>
+
+        <AdSenseBanner />
       </main>
 
       <footer className="absolute bottom-4 text-sm text-slate-400">

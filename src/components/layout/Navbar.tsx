@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, X, Calculator, Calendar as CalendarIcon, Briefcase, Bell, LayoutDashboard } from "lucide-react";
+import { Menu, X, Calculator, Calendar as CalendarIcon, Briefcase, Bell, LayoutDashboard, FileSpreadsheet } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -11,6 +11,7 @@ const navItems = [
     { name: "연차 촉진 알림", href: "/calculator/promotion", icon: Bell },
     { name: "2026 황금연휴", href: "/calculator/calendar", icon: CalendarIcon },
     { name: "신입사원 현황", href: "/calculator/new-hire", icon: LayoutDashboard },
+    { name: "HR 대시보드", href: "/hr-admin", icon: FileSpreadsheet },
 ];
 
 export default function Navbar() {

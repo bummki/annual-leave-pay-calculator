@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { addMonths, differenceInMonths, format, startOfToday, addYears, subDays } from "date-fns";
-import { CheckCircle2, Circle, Clock, AlertTriangle, Calendar } from "lucide-react";
+import { CheckCircle2, Circle, Clock, AlertTriangle, Calendar, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { downloadCsv } from "@/lib/csv-utils";
 
 export default function NewHireSimulator() {
     const [joinDateStr, setJoinDateStr] = useState<string>("");
@@ -15,7 +16,7 @@ export default function NewHireSimulator() {
     const monthsWorked = joinDate ? differenceInMonths(today, joinDate) : 0;
     const isOverOneYear = monthsWorked >= 12;
 
-    const timeline = [];
+    const timeline: { month: number; accrualDate: Date; isAccrued: boolean; isExpired: boolean }[] = [];
 
     if (joinDate) {
         // Generate 11 months of accrual points
@@ -69,6 +70,13 @@ export default function NewHireSimulator() {
                                     ? "입사 1년이 지났습니다. 1년 미만 연차는 소멸되었습니다."
                                     : `${monthsWorked}개월 근무 중입니다.`}
                             </p>
+                            <button
+                                onClick={() => downloadCsv(timeline.map(t => ({ "회차": t.month, "발생일": format(t.accrualDate, "yyyy-MM-dd"), "발생여부": t.isAccrued ? "발생" : "예정" })), "신입사원_연차타임라인")}
+                                className="w-full mt-4 flex items-center justify-center gap-2 text-primary font-bold py-2 border-2 border-primary/20 rounded-xl hover:bg-primary/5 transition-colors"
+                            >
+                                <Download className="w-4 h-4" />
+                                결과 다운로드 (CSV)
+                            </button>
                         </div>
 
                         {isOverOneYear && (
