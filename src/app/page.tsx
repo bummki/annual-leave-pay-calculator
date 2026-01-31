@@ -1,65 +1,60 @@
-import Image from "next/image";
-
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-background relative overflow-hidden">
+      {/* Background Decorative Elements */}
+      <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl" />
+      <div className="absolute bottom-[-20%] left-[-10%] w-[500px] h-[500px] bg-accent/5 rounded-full blur-3xl" />
+
+      <main className="z-10 text-center max-w-2xl space-y-8">
+        <div className="space-y-4">
+          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-primary">
+            연차, 단순한 휴가가 아닌<br />
+            <span className="text-accent">소중한 권리</span>입니다.
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-lg text-muted-foreground leading-relaxed">
+            나의 남은 연차가 <strong>돈으로 얼마인지</strong>,
+            <strong>언제 사라지는지</strong>, <br />
+            <strong>퇴직할 때 손해보지는 않는지</strong> 정확하게 확인하세요.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-lg mx-auto">
           <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/calculator/money"
+            className="premium-gradient text-primary-foreground font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 transform flex items-center justify-center"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
+            연차 수당 계산하기
           </a>
           <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/calculator/leave-days"
+            className="bg-white border-2 border-primary text-primary font-bold py-4 px-6 rounded-xl shadow-md hover:bg-slate-50 hover:scale-105 transition-all duration-300 text-lg flex items-center justify-center"
           >
-            Documentation
+            입사일 vs 회계연도 비교
+          </a>
+          <a
+            href="/calculator/promotion"
+            className="bg-white border-2 border-primary text-primary font-bold py-4 px-6 rounded-xl shadow-md hover:bg-slate-50 hover:scale-105 transition-all duration-300 text-lg flex items-center justify-center"
+          >
+            연차 촉진 알림 확인
+          </a>
+          <a
+            href="/calculator/calendar"
+            className="md:col-span-2 bg-indigo-50 border-2 border-indigo-200 text-indigo-700 font-bold py-4 px-6 rounded-xl shadow-sm hover:bg-indigo-100 hover:scale-105 transition-all duration-300 text-lg flex items-center justify-center"
+          >
+            2025 황금연휴 찾기
+          </a>
+          <a
+            href="/calculator/new-hire"
+            className="md:col-span-2 bg-emerald-50 border-2 border-emerald-200 text-emerald-700 font-bold py-4 px-6 rounded-xl shadow-sm hover:bg-emerald-100 hover:scale-105 transition-all duration-300 text-lg flex items-center justify-center"
+          >
+            신입사원(1년 미만) 연차 현황
           </a>
         </div>
       </main>
+
+      <footer className="absolute bottom-4 text-sm text-slate-400">
+        © 2026 PagePulse SEO. All rights reserved.
+      </footer>
     </div>
   );
 }
