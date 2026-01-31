@@ -82,10 +82,10 @@ export default function HrDashboard() {
                         <div className="flex flex-wrap gap-4">
                             <button
                                 onClick={downloadHrTemplate}
-                                className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-6 rounded-xl transition-all"
+                                className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-6 rounded-xl transition-all shadow-lg shadow-emerald-200 active:scale-95"
                             >
-                                <Download className="w-5 h-5" />
-                                표준 양식 다운로드
+                                <FileSpreadsheet className="w-5 h-5" />
+                                표준 양식 다운로드 (CSV)
                             </button>
                         </div>
                     </div>
