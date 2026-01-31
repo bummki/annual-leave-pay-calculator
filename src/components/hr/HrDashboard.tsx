@@ -80,13 +80,14 @@ export default function HrDashboard() {
                             엑셀 파일을 업로드하여 전 직원의 연차 수당, 촉진 일정, 퇴직 정산 리스크를 한눈에 관리하세요. 전문가의 법적 자문을 바탕으로 설계된 전용 양식을 제공합니다.
                         </p>
                         <div className="flex flex-wrap gap-4">
-                            <button
-                                onClick={downloadHrTemplate}
+                            <a
+                                href="/templates/hr-template.csv"
+                                download="연차관리_업로드_양식.csv"
                                 className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-6 rounded-xl transition-all shadow-lg shadow-emerald-200 active:scale-95"
                             >
                                 <FileSpreadsheet className="w-5 h-5" />
                                 표준 양식 다운로드 (CSV)
-                            </button>
+                            </a>
                         </div>
                     </div>
 
