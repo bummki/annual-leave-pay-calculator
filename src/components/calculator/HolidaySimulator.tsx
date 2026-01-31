@@ -7,31 +7,11 @@ import { Calendar, CheckCircle2, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function HolidaySimulator() {
-    const [year, setYear] = useState<number>(2025);
+    const [year] = useState<number>(2026);
     const holidays = useMemo(() => findGoldenHolidays(year), [year]);
 
     return (
         <div className="space-y-8">
-            {/* Year Selector */}
-            <div className="flex justify-center gap-4">
-                {[2025, 2026].map((y) => (
-                    <button
-                        key={y}
-                        onClick={() => setYear(y)}
-                        disabled={y === 2026} // MVP limit
-                        className={cn(
-                            "px-6 py-2 rounded-full font-bold transition-all",
-                            year === y
-                                ? "bg-primary text-primary-foreground shadow-md"
-                                : "bg-white text-muted-foreground border border-slate-200 hover:bg-slate-50",
-                            y === 2026 && "opacity-50 cursor-not-allowed"
-                        )}
-                    >
-                        {y}년 {y === 2026 && "(준비중)"}
-                    </button>
-                ))}
-            </div>
-
             <div className="grid grid-cols-1 gap-6">
                 {holidays.map((h, idx) => (
                     <HolidayCard key={idx} holiday={h} />

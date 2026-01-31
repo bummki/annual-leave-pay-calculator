@@ -15,33 +15,28 @@ export interface GoldenHoliday {
     description: string;
 }
 
-// Fixed holidays and Major Lunar Holidays (Hardcoded for 2025-2026)
+// 2026년 공휴일 데이터 업데이트
 const HOLIDAYS: Record<number, Holiday[]> = {
-    2025: [
-        { date: "2025-01-01", name: "신정" },
-        { date: "2025-01-27", name: "설날 연휴" },
-        { date: "2025-01-28", name: "설날" },
-        { date: "2025-01-29", name: "설날 연휴" },
-        { date: "2025-01-30", name: "대체공휴일" },
-        { date: "2025-03-01", name: "삼일절" },
-        { date: "2025-03-03", name: "대체공휴일" },
-        { date: "2025-05-05", name: "어린이날" },
-        { date: "2025-05-06", name: "부처님오신날" },
-        { date: "2025-06-06", name: "현충일" },
-        { date: "2025-08-15", name: "광복절" },
-        { date: "2025-10-03", name: "개천절" },
-        { date: "2025-10-05", name: "추석 연휴" },
-        { date: "2025-10-06", name: "추석" },
-        { date: "2025-10-07", name: "추석 연휴" },
-        { date: "2025-10-08", name: "대체공휴일" },
-        { date: "2025-10-09", name: "한글날" },
-        { date: "2025-12-25", name: "크리스마스" },
-    ],
     2026: [
         { date: "2026-01-01", name: "신정" },
+        { date: "2026-02-16", name: "설날 연휴" },
         { date: "2026-02-17", name: "설날" },
+        { date: "2026-02-18", name: "설날 연휴" },
         { date: "2026-03-01", name: "삼일절" },
+        { date: "2026-03-02", name: "대체공휴일" },
         { date: "2026-05-05", name: "어린이날" },
+        { date: "2026-05-24", name: "부처님오신날" },
+        { date: "2026-05-25", name: "대체공휴일" },
+        { date: "2026-06-06", name: "현충일" },
+        { date: "2026-08-15", name: "광복절" },
+        { date: "2026-08-17", name: "대체공휴일" },
+        { date: "2026-09-24", name: "추석 연휴" },
+        { date: "2026-09-25", name: "추석" },
+        { date: "2026-09-26", name: "추석 연휴" },
+        { date: "2026-09-28", name: "대체공휴일" },
+        { date: "2026-10-03", name: "개천절" },
+        { date: "2026-10-05", name: "대체공휴일" },
+        { date: "2026-10-09", name: "한글날" },
         { date: "2026-12-25", name: "크리스마스" },
     ]
 };
@@ -59,60 +54,59 @@ function getHolidayName(date: Date, year: number): string | null {
 }
 
 export function findGoldenHolidays(year: number): GoldenHoliday[] {
-    // 2025 Key Dates Manual Definition
-    if (year === 2025) {
+    // 2026 Key Dates Manual Definition
+    if (year === 2026) {
         return [
             {
-                startDate: new Date("2025-01-25"), // Sat
-                endDate: new Date("2025-02-02"),   // Sun
+                startDate: new Date("2026-01-01"), // Thu
+                endDate: new Date("2026-01-04"),   // Sun
+                totalDays: 4,
+                leaveDaysNeeded: 1, // Jan 2 (Fri)
+                leaveDates: [new Date("2026-01-02")],
+                description: "신정(목) 다음날 연차를 쓰면 새해 벽두부터 4일 연휴!"
+            },
+            {
+                startDate: new Date("2026-02-14"), // Sat
+                endDate: new Date("2026-02-22"),   // Sun
                 totalDays: 9,
-                leaveDaysNeeded: 2, // Jan 27(Mon), Jan 31(Fri)
-                leaveDates: [new Date("2025-01-27"), new Date("2025-01-31")],
-                description: "설날 앞뒤로 연차 2개를 쓰면 9일 휴가가 완성됩니다!"
+                leaveDaysNeeded: 2, // Feb 19, 20
+                leaveDates: [new Date("2026-02-19"), new Date("2026-02-20")],
+                description: "설날 연휴 뒤에 연차 2개를 붙여보세요. 무려 9일간의 긴 휴식!"
             },
             {
-                startDate: new Date("2025-05-03"),
-                endDate: new Date("2025-05-06"),
+                startDate: new Date("2026-05-02"), // Sat
+                endDate: new Date("2026-05-05"),   // Tue
                 totalDays: 4,
-                leaveDaysNeeded: 0,
-                leaveDates: [],
-                description: "5월 가정의 달, 연차 없이 4일 연속 휴식!"
+                leaveDaysNeeded: 1, // May 4 (Mon)
+                leaveDates: [new Date("2026-05-04")],
+                description: "어린이날(화) 앞의 월요일에 연차를 쓰면 4일 휴가 완성."
             },
             {
-                startDate: new Date("2025-06-06"), // Fri
-                endDate: new Date("2025-06-08"),   // Sun
-                totalDays: 3,
-                leaveDaysNeeded: 0,
-                leaveDates: [],
-                description: "현충일 금요일 휴무로 3일 연휴"
-            },
-            {
-                startDate: new Date("2025-08-15"), // Fri
-                endDate: new Date("2025-08-17"),   // Sun
-                totalDays: 3,
-                leaveDaysNeeded: 0,
-                leaveDates: [],
-                description: "광복절 금요일 휴무로 시원한 3일 연휴"
-            },
-            {
-                startDate: new Date("2025-10-03"), // Fri (Gaecheon)
-                endDate: new Date("2025-10-12"),   // Next Sun
+                startDate: new Date("2026-09-19"), // Sat
+                endDate: new Date("2026-09-28"),   // Mon
                 totalDays: 10,
-                leaveDaysNeeded: 1,
-                leaveDates: [new Date("2025-10-10")],
-                description: "2025년 역대급 추석 황금연휴! 연차 1개로 10일을 쉬세요."
+                leaveDaysNeeded: 2, // Sep 22, 23
+                leaveDates: [new Date("2026-09-22"), new Date("2026-09-23")],
+                description: "추석 연휴를 앞두고 연차 2개를 쓰면 열흘간의 황금연휴!"
             },
             {
-                startDate: new Date("2025-12-25"), // Thu
-                endDate: new Date("2025-12-28"),   // Sun
-                totalDays: 4,
-                leaveDaysNeeded: 1, // Dec 26 (Fri)
-                leaveDates: [new Date("2025-12-26")],
-                description: "크리스마스(목) 다음날 연차 쓰면 주말까지 4일 연휴!"
+                startDate: new Date("2026-10-03"), // Sat
+                endDate: new Date("2026-10-05"),   // Mon
+                totalDays: 3,
+                leaveDaysNeeded: 0,
+                leaveDates: [],
+                description: "개천절 대체공유일로 연차 없이 3일 꿀맛 휴식."
+            },
+            {
+                startDate: new Date("2026-10-09"), // Fri
+                endDate: new Date("2026-10-11"),   // Sun
+                totalDays: 3,
+                leaveDaysNeeded: 0,
+                leaveDates: [],
+                description: "한글날 금요일 휴무로 깔끔한 3일 연휴."
             }
         ];
     }
-
     return [];
 }
 

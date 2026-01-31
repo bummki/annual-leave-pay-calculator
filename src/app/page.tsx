@@ -41,7 +41,7 @@ export default function Home() {
             href="/calculator/calendar"
             className="md:col-span-2 bg-indigo-50 border-2 border-indigo-200 text-indigo-700 font-bold py-4 px-6 rounded-xl shadow-sm hover:bg-indigo-100 hover:scale-105 transition-all duration-300 text-lg flex items-center justify-center"
           >
-            2025 황금연휴 찾기
+            2026 황금연휴 찾기
           </a>
           <a
             href="/calculator/new-hire"
